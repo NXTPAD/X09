@@ -3,7 +3,7 @@
   "use strict";
 
   // ---------- X09 shared physics + account kit (public/x09/) ----------
-  X09Space.start({ density: 0.85, opacity: 0.8 });
+  X09Space.start({ density: 0.85, opacity: 0.8, bodies: false });
   X09.init({ site: "ai" });
 
   // ---------- Elements ----------
@@ -464,6 +464,15 @@
       respond({ threadId: currentId, regenerate: true });
     }
   });
+
+  // Phones: Fast / Deep sit in a strip under the top bar so the bar fits like the X09 Hub header
+  (() => {
+    const modeEl = document.querySelector(".topbar .mode"), home = modeEl?.parentElement, strip = $("modeStrip");
+    if (!modeEl || !strip) return;
+    const mq = matchMedia("(max-width: 820px)");
+    const place = () => { if (mq.matches) strip.insertBefore(modeEl, strip.firstChild); else home.insertBefore(modeEl, home.querySelector("[data-x09-switcher]")); };
+    mq.addEventListener("change", place); place();
+  })();
 
   document.querySelectorAll(".mode button").forEach((b) =>
     b.addEventListener("click", () => {
